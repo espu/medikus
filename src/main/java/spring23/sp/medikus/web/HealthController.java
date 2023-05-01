@@ -70,10 +70,6 @@ public class HealthController {
 	// Redirect to statistics page, which presents the stress level during the day
 	@GetMapping("/statistics")
 	public String statistics(Model model) {
-		Map<String, String> chartData = new TreeMap<>();
-		for (Activity activities : activityRepository.findAll()) {
-			chartData.put(activities.getTime(), activities.getMood());
-		}
 		model.addAttribute("activities", activityRepository.findAll());
 		return "statistics";
 	}
