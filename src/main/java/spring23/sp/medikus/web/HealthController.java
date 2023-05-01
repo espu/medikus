@@ -116,16 +116,6 @@ public class HealthController {
 		return "redirect:../home";
 	}
 	
-	//Checking if the user has already seen the the introduction popup article
-	@GetMapping("/showArticlePopup")
-	public String showArticlePopup(HttpSession session) {
-	    // Set flag indicating user has not yet seen popup
-	    session.setAttribute("articlePopupShown", false);
-
-	    // Return view for article popup
-	    return "articlePopup";
-	}
-
 	// REST 
 
 	// Get all health journals
