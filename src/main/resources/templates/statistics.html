@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<title>Medikus</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"
+	th:href="@{/css/bootstrap.min.css}" />
+<link rel="stylesheet" href="/css/style.css">
+<!-- Google charts script to display line chat -->
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+  google.charts.load('current', {'packages' : [ 'corechart' ]});
+	google.charts.setOnLoadCallback(drawChart);
+
+	// Function that creates and populates a data table, passes data and creates the table
+	function drawChart() {
+
+		var data = new google.visualization.DataTable();
+		var gChart = popChart();
+		// Defining column names and type
+		data.addColumn('string', 'Time');
+		data.addColumn('number', 'Stress');
+		
+		// Populate chart row
+		for(var i = 0; i < gChart.length; i++){
+			data.addRow(gChart[i]);
+		}
+		
+		// Set chart options
+		var options = {
+			title : 'Stress level during the day',
+			titleTextStyle: {
+		        fontSize: 28
+		    },
+			hAxis : {
+                title : 'Time',
+            },
+            vAxis : {
+                title : 'Stress level (Scale 1 to 10)'
+            },
+            backgroundColor: "transparent",
+            colors: ['#9999ff']
+            
+		};
+
+		// Draw chart
+		var chart = new google.visualization.LineChart(document
+				.getElementById('linechart'));
+
+		chart.draw(data, options);
+	}
+	
+	// Accessing chart data and modifying data to allow for chart display
+	function popChart(){
+		var tableData = document.getElementById('data');
+	    var tempData = [];
+	    var arrayData = [];
+	    
+	    if(tableData) {
+	        Array.from(tableData.rows).forEach((tr, row_ind) => {
+	            Array.from(tr.cells).forEach((cell, col_ind) => {
+	               tempData.push(cell.textContent);
+	            });
+	        });
+	    }
+	    
+	    // Transform tempData array to 2D Array
+	    while(tempData.length){
+	        arrayData.push(tempData.splice(0,2));
+	    }
+	    
+	    // Parsing the values to type int
+	    for(var i = 0; i< arrayData.length; i++){
+	        arrayData[i][1] = parseInt(arrayData[i][1]);
+	    }
+	    
+	    var returnArray = [];    
+	    // Input data
+	    arrayData.forEach(entry => {
+	        const [key, value] = entry;
+	        const filtered = returnArray.filter(item => item[0] === key);
+	        returnArray.push([key, value]);
+	    });
+	    
+	    return returnArray;
+	}
+</script>
+
+</head>
+<body>
+	<!-- Video background autoplay -->
+	<div>
+		<video autoplay muted loop class="video">
+			<source src="images/ambient_background.mp4" type="video/mp4">
+		</video>
+	</div>
+
+	<!-- Header showing the application name, navigation, logout button and a link to the ADMIN ONLY user list button -->
+	<header
+		class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+		<div class="col-md-3 mb-2 mb-md-0">
+			<a href="/home"
+				style="text-align: center; color: rgba(0, 0, 155, 0.35); font-size: 28px; font-weight: bold; text-decoration: none;">
+				Medikus </a>
+		</div>
+
+		<ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+			<li><a href="/home" class="btn btn-light text-light"
+				style="background: rgba(0, 0, 155, 0.35);">Home</a></li>
+			<li><a href="/healthlist" class="btn btn-light text-light"
+				style="background: rgba(0, 0, 155, 0.35);">Record</a></li>
+			<li><a href="/statistics" class="btn btn-light text-light"
+				style="background: rgba(0, 0, 155, 0.35);">Statistics</a></li>
+			<li><a href="/about" class="btn btn-light text-light"
+				style="background: rgba(0, 0, 155, 0.35);">About</a></li>
+		</ul>
+
+		<div class="col-md-3">
+
+			<form style="display: inline; float: right; margin: 5px"
+				th:action="@{/logout}" method="post">
+				<input type="submit" class="btn btn-sm btn-danger" value="Log out" />
+			</form>
+			<div sec:authorize="hasAuthority('ADMIN')"
+				style="display: inline; float: right; margin: 5px">
+				<a href="/userlist" class="btn btn-sm btn-outline-secondary">User
+					list</a>
+			</div>
+		</div>
+	</header>
+	
+	<!-- Chart -->
+	<div id="linechart" style="width: 100%; height: 500px;"></div>
+	
+	<!-- Hidden data table used to display data -->
+	<table id="data" style="display: none;">
+		<tr th:each="activity : ${activities}">
+			<td th:text="${activity.time}"></td>
+			<td th:text="${activity.stress}"></td>
+		</tr>
+	</table>
+</body>
+</html>
