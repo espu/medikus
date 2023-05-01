@@ -22,7 +22,7 @@ public class WebSecurityConfig {
 		http
         	.authorizeRequests().requestMatchers("/css/**").permitAll()	// Enable CSS without authentication;
         	.and()
-        	.authorizeRequests().requestMatchers("/signup", "/saveuser").permitAll()
+        	.authorizeRequests().requestMatchers("/signup").permitAll()	// Enable signup without authentication
             .and()
 			.authorizeRequests().anyRequest().authenticated()
 	        .and()
