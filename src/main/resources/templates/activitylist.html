@@ -1,0 +1,152 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<title>Medikus</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"
+	th:href="@{/css/bootstrap.min.css}" />
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body style="margin: 0 0 100px;">
+	<!-- Video background autoplay -->
+	<div>
+		<video autoplay muted loop class="video">
+			<source src="/images/ambient_background.mp4" type="video/mp4">
+		</video>
+	</div>
+
+	<!-- Header showing the application name, navigation, logout button and a the ADMIN ONLY user list button -->
+	<header
+		class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+		<div class="col-md-3 mb-2 mb-md-0">
+			<a href="/home"
+				style="text-align: center; color: rgba(0, 0, 155, 0.35); font-size: 28px; font-weight: bold; text-decoration: none;">
+				Medikus </a>
+		</div>
+
+		<ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+			<li><a href="/home" class="btn btn-light text-light"
+				style="background: rgba(0, 0, 155, 0.35);">Home</a></li>
+			<li><a href="/healthlist" class="btn btn-light text-light"
+				style="background: rgba(0, 0, 155, 0.35);">Record</a></li>
+			<li><a href="/statistics" class="btn btn-light text-light"
+				style="background: rgba(0, 0, 155, 0.35);">Statistics</a></li>
+			<li><a href="/about" class="btn btn-light text-light"
+				style="background: rgba(0, 0, 155, 0.35);">About</a></li>
+		</ul>
+
+		<div class="col-md-3">
+
+			<form style="display: inline; float: right; margin: 5px"
+				th:action="@{/logout}" method="post">
+				<input type="submit" class="btn btn-sm btn-danger" value="Log out" />
+			</form>
+			<div sec:authorize="hasAuthority('ADMIN')"
+				style="display: inline; float: right; margin: 5px">
+				<a href="/userlist" class="btn btn-sm btn-outline-secondary">User
+					list</a>
+			</div>
+		</div>
+	</header>
+
+	<div style="display: flex;">
+		<!-- Table displaying newly added activities and enables the user to delete activities -->
+		<div style="flex: 1; width: 65%;">
+			<div
+				style="color: rgba(0, 0, 155, 0.35); font-size: 33px; text-align: center;">
+				Activities
+			</div>
+			<table class="table table-hover">
+				<tr style="background-color: rgba(0, 0, 155, 0.35); color: #ffffff;">
+					<th>Time</th>
+					<th>Activity</th>
+					<th>Duration</th>
+					<th>Stress level</th>
+					<th>Mood</th>
+					<th>Water intake (Liter)</th>
+					<th>&nbsp;</th>
+				</tr>
+				<tr th:if="${health.activities.empty}">
+					<td colspan="4">There are no activities for this health
+						journal!</td>
+				</tr>
+				<tr th:each="activity : ${health.activities}">
+					<td th:text="${activity.time}"></td>
+					<td th:text="${activity.activityInput}"></td>
+					<td th:text="${activity.duration}"></td>
+					<td th:text="${activity.stress}"></td>
+					<td th:text="${activity.mood}"></td>
+					<td th:text="${activity.water}"></td>
+					<td><a
+						th:href="@{/healthlist/{id}/activities/delete/{activityid}(id=${health.healthId}, activityid=${activity.activityId})}"
+						class="btn btn-xs btn-outline-danger">Remove</a></td>
+				</tr>
+			</table>
+		</div>
+
+		<!-- Form to add activities for the day with save and reset button -->
+		<div style="flex: 1; flex-direction: column; align-items: center;">
+			<div
+				style="color: rgba(0, 0, 155, 0.35); font-size: 35px; text-align: center;">
+				Add activity
+			</div>
+			<form
+				th:action="@{/healthlist/{id}/activities/save (id=${health.healthId})}"
+				action="#" method="post">
+				<div
+					style="display: flex; flex-direction: column; width: 50%; float:right; margin-right: 175px">
+					<label for="time" style="color: black;">Time <select
+						id="time" th:field="${activity.time}" class="form-control"
+						required>
+							<option value="" disabled selected>Select the time</option>
+							<option value="Morning">Morning</option>
+							<option value="Lunch">Lunch</option>
+							<option value="Afternoon">Afternoon</option>
+							<option value="Evening">Evening</option>
+							<option value="Night">Night</option>
+					</select></label> <label for="activityInput">Activity <input type="text"
+						id="activityInput" th:field="${activity.activityInput}"
+						class="form-control" placeholder="e.g. Yoga" required /></label> <label
+						for="duration">Duration (in minutes)<input type="text"
+						id="duration" th:field="${activity.duration}" class="form-control"
+						placeholder="i.e. Duration in minutes" required /></label> <label
+						for="stress">Stress level (Scale of 1-10)<input
+						type="text" id="stress" th:field="${activity.stress}"
+						class="form-control" placeholder="Scale of 1-10" required /></label> <label
+						for="mood" style="color: black;">Mood <select id="mood"
+						th:field="*{activity.mood}" class="form-control">
+							<option value="" disabled selected>Select your mood</option>
+							<option value="Happy">Happy</option>
+							<option value="Sad">Sad</option>
+							<option value="Relaxed">Relaxed</option>
+							<option value="Anxious">Anxious</option>
+							<option value="Angry">Angry</option>
+							<option value="Meh">Meh</option>
+					</select>
+					</label> <label for="water">Water intake (Liter)<input type="text"
+						id="water" th:field="${activity.water}" class="form-control"
+						placeholder='e.g. 1 liter' required /></label>
+				<div>
+					<input type="submit" class="btn btn-outline-success"
+						style="display: inline; margin: 5px" value="Add activity" /> <input
+						type="reset" class="btn btn-outline-danger" value="Reset" />
+				</div>
+				</div>
+			</form>
+
+			<!-- Warning pop-up if required inputs aren't present -->
+			<div th:if="${warningMessage}">
+				<div class="alert alert-warning col-md-4"
+					th:text="${warningMessage}"></div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Additional button to return to the home page -->
+	<div>
+		<a href="/home" style="float: right; margin: 10px"
+			class="btn btn-sm btn-outline-secondary">Go home</a>
+	</div>
+</body>
+</html>

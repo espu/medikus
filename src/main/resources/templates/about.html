@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<title>Medikus</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"
+	th:href="@{/css/bootstrap.min.css}" />
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+	<div>
+		<video autoplay muted loop class="video">
+			<source src="images/ambient_background.mp4" type="video/mp4">
+		</video>
+	</div>
+	<header
+		class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+		<div class="col-md-3 mb-2 mb-md-0">
+			<a href="/home"
+				style="text-align: center; color: rgba(0, 0, 155, 0.35); font-size: 28px; font-weight: bold; text-decoration: none;">
+				Medikus </a>
+		</div>
+
+		<ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+			<li><a href="/home" class="btn btn-light text-light"
+				style="background: rgba(0, 0, 155, 0.35);">Home</a></li>
+			<li><a href="/healthlist" class="btn btn-light text-light"
+				style="background: rgba(0, 0, 155, 0.35);">Record</a></li>
+			<li><a href="/statistics" class="btn btn-light text-light"
+				style="background: rgba(0, 0, 155, 0.35);">Statistics</a></li>
+			<li><a href="/about" class="btn btn-light text-light"
+				style="background: rgba(0, 0, 155, 0.35);">About</a></li>
+		</ul>
+
+		<div class="col-md-3">
+
+			<form style="display: inline; float: right; margin: 5px"
+				th:action="@{/logout}" method="post">
+				<input type="submit" class="btn btn-sm btn-danger" value="Log out" />
+			</form>
+			<div sec:authorize="hasAuthority('ADMIN')"
+				style="display: inline; float: right; margin: 5px">
+				<a href="/userlist" class="btn btn-sm btn-outline-secondary">User
+					list</a>
+			</div>
+		</div>
+	</header>
+	
+	<!-- About article -->
+	<div>
+		<article
+			style="background-color: rgba(0, 0, 155, 0.35); color: white; border-radius: 20px; margin: 10px 10px 10px 10px; padding: 20px; text-align: center">
+			<h2>Medikus</h2>
+			<p>Medikus is a health journal application that lets you record
+				your daily health related activities. You can easily add and track
+				your activities with details like what, how, and when you did
+				something that has benefited your health. By keeping a record of
+				your health habits and progress over time, you can identify
+				patterns, set goals, and make positive changes to your lifestyle.</p>
+			<hr>
+			<p> Background credit goes to CHLOMA</p>
+		</article>
+	</div>
+</body>
+</html>

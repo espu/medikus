@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<title>Medikus</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"
+	th:href="@{/css/bootstrap.min.css}" />
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+	<!-- Video background autoplay -->
+	<div>
+		<video autoplay muted loop class="video">
+			<source src="images/ambient_background.mp4" type="video/mp4">
+		</video>
+	</div>
+
+	<!-- Header showing the application name, navigation, logout button and a link to the ADMIN ONLY user list button -->
+	<header
+		class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+		<div class="col-md-3 mb-2 mb-md-0">
+			<a href="/home"
+				style="text-align: center; color: rgba(0, 0, 155, 0.35); font-size: 28px; font-weight: bold; text-decoration: none;">
+				Medikus </a>
+		</div>
+
+		<ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+			<li><a href="/home" class="btn btn-light text-light"
+				style="background: rgba(0, 0, 155, 0.35);">Home</a></li>
+			<li><a href="/healthlist" class="btn btn-light text-light"
+				style="background: rgba(0, 0, 155, 0.35);">Record</a></li>
+			<li><a href="/statistics" class="btn btn-light text-light"
+				style="background: rgba(0, 0, 155, 0.35);">Statistics</a></li>
+			<li><a href="/about" class="btn btn-light text-light"
+				style="background: rgba(0, 0, 155, 0.35);">About</a></li>
+		</ul>
+
+		<div class="col-md-3">
+
+			<form style="display: inline; float: right; margin: 5px"
+				th:action="@{/logout}" method="post">
+				<input type="submit" class="btn btn-sm btn-danger" value="Log out" />
+			</form>
+			<div sec:authorize="hasAuthority('ADMIN')"
+				style="display: inline; float: right; margin: 5px">
+				<a href="/userlist" class="btn btn-sm btn-outline-secondary">User
+					list</a>
+			</div>
+		</div>
+	</header>
+	<!-- Introduction article, which is a popup that disappears after checking if the current user has logged in for the first time -->
+	<div th:if="${hasSeenPopup == false}">
+		<article
+			style="background-color: rgba(0, 0, 155, 0.35); color: white; border-radius: 20px; margin: 10px 10px 10px 10px; padding: 20px;">
+			<h1>Welcome to Medikus!</h1>
+			<p>Medikus is a health journal application that lets you record
+				your daily health related activities. You can easily add and track
+				your activities with details like what, how, and when you did
+				something that has benefited your health. By keeping a record of
+				your health habits and progress over time, you can identify
+				patterns, set goals, and make positive changes to your lifestyle.</p>
+		</article>
+	</div>
+
+	<!-- Display function button to add health journals and the current user that is logged in-->
+	<div>
+		<h4 style="display: inline; float: right; margin: 5px">
+			Logged in as: <b style="text-transform: capitalize;"
+				sec:authentication="name"></b>
+		</h4>
+		<a href="/addhealthjournal" class="btn btn-outline-success"
+			style="display: inline; margin: 5px">Add health journal</a>
+	</div>
+
+	<!-- Table displaying all health journals ordered by date as well as function buttons to edit, delete and access activities -->
+	<table class="table table-hover">
+		<tr style="background-color: rgba(0, 0, 155, 0.35); color: #ffffff;">
+			<th>Date</th>
+			<th>Motto of the day</th>
+			<th>&nbsp;</th>
+			<th>&nbsp;</th>
+			<th>&nbsp;</th>
+
+		</tr>
+		<tr th:if="${healths.empty}">
+			<td colspan="4">There is no information about your health
+				journey yet!</td>
+		</tr>
+		<tr th:each="health : ${healths}">
+			<td th:text="${health.dateFormatted}"></td>
+			<td th:text="${health.motto}"></td>
+			<td><a th:href="@{/edit/{id}(id=${health.healthId})}"
+				class="btn btn-outline-warning">Edit health journal</a></td>
+			<td><a th:href="@{/delete/{id}(id=${health.healthId})}"
+				class="btn btn-outline-danger"
+				onclick="return confirm('Are you sure?')">Delete health journal</a></td>
+			<td><a
+				th:href="@{/healthlist/{id}/activities/(id=${health.healthId})}"
+				class="btn btn-light text-light"
+				style="background: rgba(0, 0, 155, 0.35);">Activities</a></td>
+		</tr>
+	</table>
+</body>
+</html>

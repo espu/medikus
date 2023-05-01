@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<title>Medikus signup</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"
+	th:href="@{/css/bootstrap.min.css}" />
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+	<!-- Video background autoplay -->
+	<div>
+		<video autoplay muted loop class="video">
+			<source src="images/ambient_background.mp4" type="video/mp4">
+		</video>
+	</div>
+
+	<!-- Clickable logo -->
+	<div style="text-align: center;">
+		<a href="/login"
+			style="color: rgba(0, 0, 155, 0.35); font-size: 52px; font-weight: bold; text-decoration: none;">
+			Medikus </a>
+	</div>
+	
+	<!-- Signup form and error check -->
+	<div class="form-group" style="text-align: center; color: black; padding: 10px 20px;">
+			<form th:object="${signupform}" th:action="@{/saveuser}" action="#"
+				method="POST">
+				<div>
+					<label>Username <input type="text" th:field="*{username}"
+						class="form-control" /></label>
+					<p th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username already exists!</p>
+				</div>
+				<div>
+					<label>Password <input type="password"
+						th:field="*{password}" class="form-control" /></label>
+					<p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password
+						error</p>
+				</div>
+				<div>
+					<label>Re-type password <input type="password"
+						th:field="*{passwordCheck}" class="form-control" /></label>
+					<p th:if="${#fields.hasErrors('passwordCheck')}"
+						th:errors="*{passwordCheck}">Password doesn't match</p>
+				</div>
+				<input type="submit" class="btn btn-light text-light" style="background: rgba(0, 0, 155, 0.35);" value="Sign-up" /> <a
+					href="/login" class="btn btn-outline-danger">Cancel</a>
+			</form>
+		</div>
+</body>
