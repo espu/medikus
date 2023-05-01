@@ -65,9 +65,19 @@ public class HealthController {
         }
         model.addAttribute("hasSeenPopup", hasSeenPopup);
         return "home";
-    }
+	}
 	
-
+	// Redirect to statistics page, which presents the stress level during the day
+	@GetMapping("/statistics")
+	public String statistics(Model model) {
+		Map<String, String> chartData = new TreeMap<>();
+		for (Activity activities : activityRepository.findAll()) {
+			chartData.put(activities.getTime(), activities.getMood());
+		}
+		model.addAttribute("activities", activityRepository.findAll());
+		return "statistics";
+	}
+	
 	// Redirect to about page
 	@GetMapping("/about")
 	public String about(Model model, Authentication auth) {
