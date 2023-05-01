@@ -22,6 +22,7 @@ import spring23.sp.medikus.domain.SignupForm;
 import spring23.sp.medikus.domain.User;
 import spring23.sp.medikus.domain.UserRepository;
 import spring23.sp.medikus.domain.Activity;
+import spring23.sp.medikus.domain.ActivityRepository;
 import spring23.sp.medikus.domain.Health;
 import spring23.sp.medikus.domain.HealthRepository;
 
@@ -31,6 +32,9 @@ public class HealthController {
 
 	@Autowired
 	HealthRepository healthRepository;
+	
+	@Autowired
+	ActivityRepository activityRepository;
 
 	@Autowired
 	UserRepository userRepository;
