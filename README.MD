@@ -10,6 +10,6 @@
 </p>
 
 <h5>
-Java, Spring Boot, Thymeleaf, PostgreSQL<br/>
-Deployment on Heroku: [Link](https://medikus.herokuapp.com/login)
+Java, Spring Boot, Thymeleaf, Google Charts, and PostgreSQL<br/>
+Deployment on Heroku: https://medikus.herokuapp.com/login
 </h5>
